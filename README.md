@@ -11,6 +11,8 @@
 3. Explore the excel files of business_all_stock files, you will get to know the rest by yourself.
 
 # Some of the screenshots of the application
+![Image 7](https://user-images.githubusercontent.com/55422483/122637463-9ede9000-d110-11eb-8bc2-4e498e8fa9c1.png)
+![Image 8](https://user-images.githubusercontent.com/55422483/122637465-a0a85380-d110-11eb-8345-af6d543f2100.png)
 ![Image 1](https://user-images.githubusercontent.com/55422483/122637024-44443480-d10e-11eb-93ab-2ea071c641ed.png)
 ![Image 2](https://user-images.githubusercontent.com/55422483/122637027-45756180-d10e-11eb-824e-c90968eb820e.png)
 ![Image 3](https://user-images.githubusercontent.com/55422483/122637030-46a68e80-d10e-11eb-97ad-c88e62775af6.png)
