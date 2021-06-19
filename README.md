@@ -5,7 +5,7 @@
 1. Customer product purchase layout
 2. Can maintain your daily warehouse product stocks
 3. Report sales and show earlier sales history
-4. Print stock/sales and customer purchase bills
+4. Print stock/sales and customer purchase bills [see testPrint.pdf]
 ### Before anything, you must have JDK-1.81 installed on your pc.
 ### Instructions of use:
 1. Execute APPLICATION.Jar to run the application
