@@ -1,6 +1,9 @@
 # Purchase-Sales-Stock-Listing-Application
 ## It is built on JAVA-Swing framework with Microsoft-Excel backend for data storage and retreival
 ## Fully made on Bengali Interface with Sutonny-OMJ
+## What it does?
+1. Can maintain your daily stocks
+2. Report sales and show earlier sales history
 ### Before anything, you must have JDK-1.81 installed on your pc.
 ### Instructions of use:
 1. Execute APPLICATION.Jar to run the application
