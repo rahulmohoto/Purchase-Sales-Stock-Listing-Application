@@ -5,6 +5,7 @@
 1. Customer product purchase layout
 2. Can maintain your daily warehouse product stocks
 3. Report sales and show earlier sales history
+4. Print stock/sales and customer purchase bills [see testPrint.pdf and testPrint2.pdf]
 ### Before anything, you must have JDK-1.81 installed on your pc.
 ### Instructions of use:
 1. Execute APPLICATION.Jar to run the application
@@ -20,3 +21,5 @@
 ![Image 4](https://user-images.githubusercontent.com/55422483/122637031-48705200-d10e-11eb-9f8b-be014b17946e.png)
 ![Image 5](https://user-images.githubusercontent.com/55422483/122637032-4ad2ac00-d10e-11eb-81b2-7008a0bd5099.png)
 ![Image 6](https://user-images.githubusercontent.com/55422483/122637033-4d350600-d10e-11eb-9b81-54a33da05fcc.png)
+![Image 9](https://user-images.githubusercontent.com/55422483/122638011-612f3680-d113-11eb-9d6d-5d6ce5155212.png)
+![Image 10](https://user-images.githubusercontent.com/55422483/122638015-62f8fa00-d113-11eb-96b6-ff2fcc891070.png)
