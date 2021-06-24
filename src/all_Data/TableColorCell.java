@@ -15,21 +15,23 @@ public class TableColorCell implements TableCellRenderer {
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus,
 			int row, int column) {
 		// TODO Auto-generated method stub
-		int gray_range = 7, r_s_gray = 0, r_f_gray = gray_range+r_s_gray,
-			pink_range = 9, r_s_pink = r_f_gray+1, r_f_pink = pink_range+r_s_pink,
-			green_range = 5, r_s_green = r_f_pink+1, r_f_green = green_range+r_s_green,
-			magenta_range = 3, r_s_magenta = r_f_green+1, r_f_magenta = magenta_range+r_s_magenta,
-			cyan_range = 6, r_s_cyan = r_f_magenta+1, r_f_cyan = cyan_range+r_s_cyan,
-			orange_range = 2, r_s_orange = r_f_cyan+1, r_f_orange = orange_range+r_s_orange,
-			red_range = 2, r_s_red = r_f_orange+1, r_f_red = red_range+r_s_red,
-			yellow_range = 3, r_s_yellow = r_f_red+1, r_f_yellow = yellow_range+r_s_yellow,
+		int interval = 2;
+		
+		int gray_range = 7, r_s_gray = 0, r_f_gray = gray_range+r_s_gray-1,
+			pink_range = 6, r_s_pink = r_f_gray+interval, r_f_pink = pink_range+r_s_pink-1,
+			green_range = 5, r_s_green = r_f_pink+interval, r_f_green = green_range+r_s_green-1,
+			magenta_range = 3, r_s_magenta = r_f_green+interval, r_f_magenta = magenta_range+r_s_magenta-1,
+			cyan_range = 6, r_s_cyan = r_f_magenta+interval, r_f_cyan = cyan_range+r_s_cyan-1,
+			orange_range = 2, r_s_orange = r_f_cyan+interval, r_f_orange = orange_range+r_s_orange-1,
+			red_range = 2, r_s_red = r_f_orange+interval, r_f_red = red_range+r_s_red-1,
+			yellow_range = 3, r_s_yellow = r_f_red+interval, r_f_yellow = yellow_range+r_s_yellow-1,
 			
-			gray_range_2 = 4, r_s_gray2 = r_f_yellow+1, r_f_gray2 = gray_range_2+r_s_gray2,
-			pink_range_2 = 8, r_s_pink2 = r_f_gray2+1, r_f_pink2 = pink_range_2+r_s_pink2,
-			green_range_2 = 21, r_s_green2 = r_f_pink2+1, r_f_green2 = green_range_2+r_s_green2,
-			yellow_range_2 = 6, r_s_yellow2 = r_f_green2+1, r_f_yellow2 = yellow_range_2+r_s_yellow2,
+			gray_range_2 = 4, r_s_gray2 = r_f_yellow+interval, r_f_gray2 = gray_range_2+r_s_gray2-1,
+			pink_range_2 = 8, r_s_pink2 = r_f_gray2+interval, r_f_pink2 = pink_range_2+r_s_pink2-1,
+			green_range_2 = 21, r_s_green2 = r_f_pink2+interval, r_f_green2 = green_range_2+r_s_green2-1,
+			yellow_range_2 = 6, r_s_yellow2 = r_f_green2+interval, r_f_yellow2 = yellow_range_2+r_s_yellow2-1,
 			
-			gray_range_3 = 23, r_s_gray3 = r_f_yellow2+1, r_f_gray3 = gray_range_3+r_s_gray3;
+			gray_range_3 = 23, r_s_gray3 = r_f_yellow2+interval, r_f_gray3 = gray_range_3+r_s_gray3-1;
 				
 				
 		Component c = Renderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);

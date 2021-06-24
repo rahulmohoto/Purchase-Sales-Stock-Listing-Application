@@ -92,6 +92,8 @@ public class Sales_Boroghor implements Runnable{
 	private String stock_boroghor="Stock\nBOROGHOR";
 	private String stock_history="Stock\nHistory";
 	
+	private boolean isWindowOverlayed = false;
+	
 	private int numberOfRows = 88;
 	
 	public Sales_Boroghor() {
@@ -119,14 +121,13 @@ public class Sales_Boroghor implements Runnable{
 			@Override
 			public void windowGainedFocus(WindowEvent e) {
 				// TODO Auto-generated method stub
-//				System.out.println("hello this is focus gained");
-				frame_windowStateChanged(e);
+				frame_windowStateChanged_HasFocus(e);
 			}
 
 			@Override
 			public void windowLostFocus(WindowEvent e) {
 				// TODO Auto-generated method stub
-//				System.out.println("hello this is focus lost");	
+				frame_windowStateChanged_LostFocus(e);
 			}
 			
 		});
@@ -172,6 +173,8 @@ public class Sales_Boroghor implements Runnable{
 				}
 				new Print_Stock("sales_boroghor");
 				
+				//New Updated
+				frame_windowStateChanged();
 			}
 		});
 		Operation_panel.add(btnGenerateTable);
@@ -189,6 +192,9 @@ public class Sales_Boroghor implements Runnable{
 				}
 				JOptionPane.showMessageDialog(frmSalesSheetBoroghor, "Saving Successful!!");
 				MainWindow.isSaved=true;
+				
+				//New Updated
+				frame_windowStateChanged(); 
 				}
 			}
 		});
@@ -326,20 +332,55 @@ public class Sales_Boroghor implements Runnable{
 		Action_panel.add(btnStockHistory);	
 	}
 	
-	//Windows Status
-	public void frame_windowStateChanged(WindowEvent e) {
-		if(frmSalesSheetBoroghor.isFocused()) {
+	//updated Window Status
+	public void frame_windowStateChanged() {
+		if(!frmSalesSheetBoroghor.isFocused()) {
+			Thread object = new Thread(this); 
+	        object.start();
+	        
+		}
+	}
+	
+	//Window Status
+	public void frame_windowStateChanged_HasFocus(WindowEvent e) {
+		if(frmSalesSheetBoroghor.isFocused() && isWindowOverlayed == false) {
 			Thread object = new Thread(this); 
 	        object.start();
 		}
+	}
+	
+	public void frame_windowStateChanged_LostFocus(WindowEvent e) {
+		isWindowOverlayed = true;
 	}
 
 	Action action = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 
 		public void actionPerformed(ActionEvent e) {
-			int noOfEntry = 0, remaining = 0;
+			int noOfEntry = 0, remaining = 0, numberOfRowsUsed = 0;
 			TableCellListener tcl = (TableCellListener) e.getSource();
+			try {
+				numberOfRowsUsed = getRemainingRows(tcl.getRow());
+				if(numberOfRowsUsed>=MainWindow.threshold) {
+					
+					String options[]= {"Yes","No"};
+					
+					int x = JOptionPane.showOptionDialog(null, "You are reaching out-of-list. Want to Save?",
+				                "Make your Choice",
+				                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					if(x==0) {
+						
+						String lastBalance = patchFiles(tcl.getRow()).getContents().toString();
+						StockHistory.removeCellData("Boroghor",MainWindow.filesBoroghor[tcl.getRow()],lastBalance);
+//						System.out.println("Okay!!");
+						
+				        }
+					
+					
+				}
+			} catch(Exception evt) {
+//				System.out.println("Problem Occured");
+			}
 			try {
 				noOfEntry = Integer.parseInt((String) table.getValueAt(tcl.getRow(), 2));
 			} catch (Exception evt) {
@@ -476,41 +517,30 @@ public class Sales_Boroghor implements Runnable{
 
 	}
 	
+	private int getRemainingRows(int row) {
+		try {
+		File tempFile = new File("D:\\business_all_stock\\Boroghor\\"+MainWindow.filesBoroghor[row]+".xls");
+		FileInputStream fsIP = new FileInputStream(tempFile);
+		HSSFWorkbook wb = new HSSFWorkbook(fsIP);
+		HSSFSheet worksheet = wb.getSheetAt(0);
+		
+		HSSFCell cellLastEdit = worksheet.getRow(1).getCell(4);
+		int last_edit_row_number = (int)Float.parseFloat(cellLastEdit.toString());
+		
+		fsIP.close();
+		wb.close();
+		
+		return last_edit_row_number;
+		
+		} catch(Exception evt) {
+			return 0;
+		}
+	}
+	
 
 	private void writeFiles(int index,int value) {
 		
 		try {
-			File tempFile = new File("D:\\business_all_stock\\Boroghor\\"+MainWindow.filesBoroghor[index]+".xls");
-			FileInputStream fsIP = new FileInputStream(tempFile);
-			HSSFWorkbook wb = new HSSFWorkbook(fsIP);
-			HSSFSheet worksheet = wb.getSheetAt(0);
-			
-			HSSFCell cellLastEdit = worksheet.getRow(1).getCell(4);
-			int last_edit_row_number = (int)Float.parseFloat(cellLastEdit.toString());
-
-			if(last_edit_row_number>=MainWindow.threshold) {
-				
-				String options[]= {"Yes","No"};
-				
-				int x = JOptionPane.showOptionDialog(null, "You are reaching out-of-list. Want to Save?",
-			                "Make your Choice",
-			                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-				if(x==0) {
-					
-					String lastBalance = patchFiles(index).getContents().toString();
-					fsIP.close();
-					wb.close();
-					StockHistory.removeCellData("Senpara",MainWindow.filesBoroghor[index],lastBalance);
-					
-			        }
-				
-				
-			}
-			} catch (IOException evt) {
-				evt.printStackTrace();
-			}
-			
-			try {
 			File tempFile = new File("D:\\business_all_stock\\Boroghor\\"+MainWindow.filesBoroghor[index]+".xls");
 			FileInputStream fsIP = new FileInputStream(tempFile);
 			HSSFWorkbook wb = new HSSFWorkbook(fsIP);
@@ -591,6 +621,8 @@ public class Sales_Boroghor implements Runnable{
 			String s = patchFiles(j).getContents().toString();
 			table.setValueAt(s, j, 3);
 		}
+		
+		isWindowOverlayed = false;
 		MainWindow.modifiedRowVectorStockBoroghor.clear();
 	}
 }

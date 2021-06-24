@@ -80,7 +80,7 @@ public class MainWindow {
 	
 	static String[] filesBoroghor={			
 			"8Lfresh","5Lfresh","3Lfresh","2Lfresh","1Lfresh","500mLfresh","250mLfresh","blank",
-			"bodhuChinigura","25kgChinigura","notunChabiChinigura","puratonChabiChinigura","puratonKobutorChinigura","notunKobutorChinigura","Amin1KgChinigura","blank",
+			"bodhuChinigura","25kgChinigura","puratonChabiChinigura","notunChabiChinigura","puratonKobutorChinigura","notunKobutorChinigura","Amin1KgChinigura","blank",
 			"shaplaRajbhog","rajaniRajbhog","golapRajbhog","kobutorRajbhog","25kgRajbhog","blank",
 			"appleKatari","khudi","25kgShiddhoKatari","blank",
 			"Kobutor50KgMiniket","Kobutor25KgMiniket","Amin50KgMiniket","Amin25KgMiniket","blank",

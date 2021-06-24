@@ -97,6 +97,7 @@ public class Stock_Senpara implements Runnable{
 	private String stock_boroghor="Stock\nBOROGHOR";
 	private String stock_history="Stock\nHistory";
 	
+	private boolean isWindowOverlayed = false;
 	
 	private int numberOfRows = 128;
 
@@ -138,13 +139,13 @@ public class Stock_Senpara implements Runnable{
 			@Override
 			public void windowGainedFocus(WindowEvent e) {
 				// TODO Auto-generated method stub
-				frame_windowStateChanged(e);
+				frame_windowStateChanged_HasFocus(e);
 			}
 
 			@Override
 			public void windowLostFocus(WindowEvent e) {
 				// TODO Auto-generated method stub
-				
+				frame_windowStateChanged_LostFocus(e);
 			}
 			
 		});
@@ -189,6 +190,9 @@ public class Stock_Senpara implements Runnable{
 			        } 
 				}
 				new Print_Stock("stock_senpara");
+				
+				//New Updated
+				frame_windowStateChanged();
 			}
 		});
 		Operation_panel.add(btnGenerateTable);
@@ -206,6 +210,9 @@ public class Stock_Senpara implements Runnable{
 				}
 				JOptionPane.showMessageDialog(frmStockSheetSenpara, "Saving Successful!!");
 				MainWindow.isSaved=true;
+				
+				//New Updated
+				frame_windowStateChanged();
 				}
 			}
 		});
@@ -342,19 +349,53 @@ public class Stock_Senpara implements Runnable{
 		btnStockHistory.setFont(new Font("Segoe UI Symbol", Font.BOLD, 11));
 		Action_panel.add(btnStockHistory);
 	}
+		//New Window Status
+		public void frame_windowStateChanged() {
+			if(!frmStockSheetSenpara.isFocused()) {
+				Thread object = new Thread(this); 
+		        object.start();
+			}	
+		}
 		
-		public void frame_windowStateChanged(WindowEvent e) {
-			if(frmStockSheetSenpara.isFocused()) {
+		public void frame_windowStateChanged_HasFocus(WindowEvent e) {
+			if(frmStockSheetSenpara.isFocused() && isWindowOverlayed == false) {
 				Thread object = new Thread(this); 
 		        object.start();
 			}
 		}
+		
+		public void frame_windowStateChanged_LostFocus(WindowEvent e) {
+			isWindowOverlayed = true;
+		}
+		
 
 	Action action = new AbstractAction() {
 		private static final long serialVersionUID = 1L;
 		public void actionPerformed(ActionEvent e) {
-		int noOfEntry=0,remaining=0;
+		int noOfEntry=0,remaining=0, numberOfRowsUsed=0;
 			TableCellListener tcl = (TableCellListener) e.getSource();
+			try {
+				numberOfRowsUsed = getRemainingRows(tcl.getRow());
+				if(numberOfRowsUsed>=MainWindow.threshold) {
+					
+					String options[]= {"Yes","No"};
+					
+					int x = JOptionPane.showOptionDialog(null, "You are reaching out-of-list. Want to Save?",
+				                "Make your Choice",
+				                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
+					if(x==0) {
+						
+						String lastBalance = patchFiles(tcl.getRow()).getContents().toString();
+						StockHistory.removeCellData("Senpara",MainWindow.filesSenpara[tcl.getRow()],lastBalance);
+//						System.out.println("Okay!!");
+				        
+					}
+					
+					
+				}
+			} catch(Exception evt) {
+//				System.out.println("Problem Occured");
+			}
 			try {
 				noOfEntry = Integer.parseInt((String) table.getValueAt(tcl.getRow(), 2));
 			} catch (Exception evt) {
@@ -477,7 +518,7 @@ public class Stock_Senpara implements Runnable{
 	}	
 	
 	
-		private Cell patchFiles(int row) {	
+	private Cell patchFiles(int row) {	
 			
 			File tempFile=new File("D:\\business_all_stock\\Senpara\\"+MainWindow.filesSenpara[row]+".xls");
 			Workbook tempWorkbook=null;
@@ -496,40 +537,30 @@ public class Stock_Senpara implements Runnable{
 		}
 		
 		
-		private void writeFiles(int index,int value) {
+	private int getRemainingRows(int row) {
+			try {
+			File tempFile = new File("D:\\business_all_stock\\Senpara\\"+MainWindow.filesSenpara[row]+".xls");
+			FileInputStream fsIP = new FileInputStream(tempFile);
+			HSSFWorkbook wb = new HSSFWorkbook(fsIP);
+			HSSFSheet worksheet = wb.getSheetAt(0);
+			
+			HSSFCell cellLastEdit = worksheet.getRow(1).getCell(4);
+			int last_edit_row_number = (int)Float.parseFloat(cellLastEdit.toString());
+			
+			fsIP.close();
+			wb.close();
+			
+			return last_edit_row_number;
+			
+			} catch(Exception evt) {
+				return 0;
+			}
+		}
+		
+		
+	private void writeFiles(int index,int value) {
 			
 			try {
-				File tempFile = new File("D:\\business_all_stock\\Senpara\\"+MainWindow.filesSenpara[index]+".xls");
-				FileInputStream fsIP = new FileInputStream(tempFile);
-				HSSFWorkbook wb = new HSSFWorkbook(fsIP);
-				HSSFSheet worksheet = wb.getSheetAt(0);
-				
-				HSSFCell cellLastEdit = worksheet.getRow(1).getCell(4);
-				int last_edit_row_number = (int)Float.parseFloat(cellLastEdit.toString());
-
-				if(last_edit_row_number>=MainWindow.threshold) {
-					
-					String options[]= {"Yes","No"};
-					
-					int x = JOptionPane.showOptionDialog(null, "You are reaching out-of-list. Want to Save?",
-				                "Make your Choice",
-				                JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE, null, options, options[0]);
-					if(x==0) {
-						
-						String lastBalance = patchFiles(index).getContents().toString();
-						fsIP.close();
-						wb.close();
-						StockHistory.removeCellData("Senpara",MainWindow.filesSenpara[index],lastBalance);
-						
-				        }
-					
-					
-				}
-				} catch (IOException evt) {
-					evt.printStackTrace();
-				}
-				
-				try {
 				File tempFile = new File("D:\\business_all_stock\\Senpara\\"+MainWindow.filesSenpara[index]+".xls");
 				FileInputStream fsIP = new FileInputStream(tempFile);
 				HSSFWorkbook wb = new HSSFWorkbook(fsIP);
@@ -558,7 +589,7 @@ public class Stock_Senpara implements Runnable{
 		}
 		
 		
-		private void fn_RefreshTable() {
+	private void fn_RefreshTable() {
 			//being ready
 			MainWindow.isSaved=false;
 			Arrays.fill(MainWindow.updatedRow, 0);
@@ -585,7 +616,7 @@ public class Stock_Senpara implements Runnable{
 		}
 
 		@Override
-		public void run() {
+	public void run() {
 			// TODO Auto-generated method stub1
 			fn_RefreshTable();
 
@@ -595,6 +626,8 @@ public class Stock_Senpara implements Runnable{
 				String s = patchFiles(j).getContents().toString();
 				table.setValueAt(s, j, 3);
 			}
+			
+			isWindowOverlayed = false;
 			MainWindow.modifiedRowVectorSalesSenpara.clear();
 		}
 }
